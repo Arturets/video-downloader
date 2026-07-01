@@ -6,7 +6,8 @@ const thumbnail = document.querySelector("#thumbnail");
 const title = document.querySelector("#title");
 const source = document.querySelector("#source");
 const meta = document.querySelector("#meta");
-const formatSelect = document.querySelector("#format");
+const videoFormatSelect = document.querySelector("#video-format");
+const audioFormatSelect = document.querySelector("#audio-format");
 const downloadButton = document.querySelector("#download");
 
 let currentUrl = "";
@@ -53,6 +54,12 @@ function optionLabel(format) {
   return `${format.id} - ${parts.join(" · ")}`;
 }
 
+function appendFormatOptions(select, formats) {
+  for (const format of formats) {
+    select.append(new Option(optionLabel(format), format.id));
+  }
+}
+
 async function postJson(path, body) {
   const response = await fetch(path, {
     method: "POST",
@@ -72,12 +79,12 @@ function renderInfo(info) {
   thumbnail.src = info.thumbnail || "";
   thumbnail.hidden = !info.thumbnail;
 
-  formatSelect.replaceChildren();
-  const best = new Option("Best available video + audio", "");
-  formatSelect.append(best);
-  for (const format of info.formats) {
-    formatSelect.append(new Option(optionLabel(format), format.id));
-  }
+  videoFormatSelect.replaceChildren();
+  audioFormatSelect.replaceChildren();
+  videoFormatSelect.append(new Option("Best available video", ""));
+  audioFormatSelect.append(new Option("Best available audio", ""));
+  appendFormatOptions(videoFormatSelect, info.formats.video || []);
+  appendFormatOptions(audioFormatSelect, info.formats.audio || []);
 
   result.hidden = false;
 }
@@ -99,7 +106,8 @@ downloadButton.addEventListener("click", async () => {
   try {
     const data = await postJson("/api/download", {
       url: currentUrl || urlInput.value.trim(),
-      formatId: formatSelect.value
+      videoFormatId: videoFormatSelect.value,
+      audioFormatId: audioFormatSelect.value
     });
     setBusy(false, `Saved to ${data.directory}`);
   } catch (error) {

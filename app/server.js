@@ -65,19 +65,26 @@ function runYtdlp(args, { stream = false } = {}) {
 
 function normalizeFormats(info) {
   const formats = Array.isArray(info.formats) ? info.formats : [];
-  return formats
+  const normalized = formats
     .filter(format => format.format_id)
     .map(format => ({
       id: format.format_id,
       ext: format.ext || "",
       resolution: format.resolution || (format.height ? `${format.height}p` : "audio"),
+      height: format.height || null,
       fps: format.fps || null,
       vcodec: format.vcodec || "none",
       acodec: format.acodec || "none",
       filesize: format.filesize || format.filesize_approx || null,
+      tbr: format.tbr || null,
       note: format.format_note || "",
       label: format.format || format.format_id
     }));
+
+  return {
+    video: normalized.filter(format => format.vcodec !== "none"),
+    audio: normalized.filter(format => format.acodec !== "none")
+  };
 }
 
 async function getInfo(url) {
@@ -94,7 +101,15 @@ async function getInfo(url) {
   };
 }
 
-async function downloadVideo({ url, formatId }) {
+function composeFormat({ videoFormatId, audioFormatId, formatId }) {
+  if (formatId) return formatId;
+  if (videoFormatId && audioFormatId) return `${videoFormatId}+${audioFormatId}`;
+  if (videoFormatId) return `${videoFormatId}+ba/b`;
+  if (audioFormatId) return audioFormatId;
+  return "bv*+ba/b";
+}
+
+async function downloadVideo({ url, formatId, videoFormatId, audioFormatId }) {
   const args = [
     "--no-playlist",
     "--paths",
@@ -105,11 +120,7 @@ async function downloadVideo({ url, formatId }) {
     "%(title).180B [%(id)s].%(ext)s"
   ];
 
-  if (formatId) {
-    args.push("-f", formatId);
-  } else {
-    args.push("-f", "bv*+ba/b");
-  }
+  args.push("-f", composeFormat({ formatId, videoFormatId, audioFormatId }));
 
   args.push(url);
   await runYtdlp(args, { stream: true });

@@ -62,7 +62,7 @@ h2 {
 }
 
 .toolbar {
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr) auto;
   margin-top: 24px;
 }
 

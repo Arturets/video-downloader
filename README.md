@@ -29,6 +29,26 @@ Downloads are saved to `~/Downloads` by default. Override with:
 VIDEO_DOWNLOAD_DIR=/path/to/folder npm run dev
 ```
 
+## Install as a local macOS app
+
+```sh
+./scripts/install-macos.sh
+```
+
+This creates:
+
+```text
+dist/Video Downloader.app
+```
+
+After that, open the app directly. It starts the local server with `node`, opens the browser UI, and logs to:
+
+```text
+~/Library/Logs/Video Downloader/server.log
+```
+
+This app wrapper does not require `npm` to launch, but it does still require Node.js, `yt-dlp`, and `ffmpeg` to be installed on the machine.
+
 ## Install the Firefox native messaging host
 
 ```sh

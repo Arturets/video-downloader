@@ -38,14 +38,16 @@ async function handle(message) {
       webpageUrl: info.webpage_url || message.url,
       thumbnail: info.thumbnail,
       extractor: info.extractor,
-      formats: (info.formats || []).map(format => ({
+        formats: (info.formats || []).map(format => ({
         id: format.format_id,
         ext: format.ext,
         resolution: format.resolution || (format.height ? `${format.height}p` : "audio"),
+        height: format.height || null,
         fps: format.fps || null,
         acodec: format.acodec,
         vcodec: format.vcodec,
-        filesize: format.filesize || format.filesize_approx || null
+        filesize: format.filesize || format.filesize_approx || null,
+        tbr: format.tbr || null
       }))
     });
     return;
@@ -60,7 +62,12 @@ async function handle(message) {
       "-o",
       "%(title).180B [%(id)s].%(ext)s",
       "-f",
-      message.formatId || "bv*+ba/b",
+      message.formatId ||
+        (message.videoFormatId && message.audioFormatId
+          ? `${message.videoFormatId}+${message.audioFormatId}`
+          : message.videoFormatId
+            ? `${message.videoFormatId}+ba/b`
+            : message.audioFormatId || "bv*+ba/b"),
       message.url
     ];
     await runYtdlp(args);
