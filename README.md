@@ -72,10 +72,10 @@ npm run package:firefox
 Upload this ZIP in Mozilla Add-on Developer Hub:
 
 ```text
-dist/video-downloader-firefox-0.1.0.zip
+dist/video-downloader-firefox.zip
 ```
 
-The ZIP is built with `manifest.json` at the archive root, which is what AMO expects. The `.xpi` beside it is the same package with Firefox's install extension.
+The script also creates versioned artifacts such as `dist/video-downloader-firefox-0.1.0.zip`. The ZIP is built with `manifest.json` at the archive root, which is what AMO expects. The `.xpi` beside it is the same package with Firefox's install extension.
 
 Suggested AMO reviewer note:
 

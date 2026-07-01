@@ -162,7 +162,10 @@ async function serveStatic(req, res) {
 
   try {
     await readFile(filePath);
-    res.writeHead(200, { "content-type": types[extname(filePath)] || "application/octet-stream" });
+    res.writeHead(200, {
+      "content-type": types[extname(filePath)] || "application/octet-stream",
+      "cache-control": "no-store"
+    });
     createReadStream(filePath).pipe(res);
   } catch {
     res.writeHead(404);

@@ -60,6 +60,20 @@ function appendFormatOptions(select, formats) {
   }
 }
 
+function splitFormats(formats) {
+  if (!Array.isArray(formats)) {
+    return {
+      video: formats?.video || [],
+      audio: formats?.audio || []
+    };
+  }
+
+  return {
+    video: formats.filter(format => format.vcodec !== "none"),
+    audio: formats.filter(format => format.acodec !== "none")
+  };
+}
+
 async function postJson(path, body) {
   const response = await fetch(path, {
     method: "POST",
@@ -79,12 +93,14 @@ function renderInfo(info) {
   thumbnail.src = info.thumbnail || "";
   thumbnail.hidden = !info.thumbnail;
 
+  const formats = splitFormats(info.formats);
+
   videoFormatSelect.replaceChildren();
   audioFormatSelect.replaceChildren();
   videoFormatSelect.append(new Option("Best available video", ""));
   audioFormatSelect.append(new Option("Best available audio", ""));
-  appendFormatOptions(videoFormatSelect, info.formats.video || []);
-  appendFormatOptions(audioFormatSelect, info.formats.audio || []);
+  appendFormatOptions(videoFormatSelect, formats.video);
+  appendFormatOptions(audioFormatSelect, formats.audio);
 
   result.hidden = false;
 }
