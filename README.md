@@ -63,6 +63,26 @@ Then load the extension temporarily in Firefox:
 
 The extension currently opens the local web app for format selection. The native messaging host is scaffolded and ready for a richer extension popup/options flow.
 
+## Package the Firefox extension for AMO
+
+```sh
+npm run package:firefox
+```
+
+Upload this ZIP in Mozilla Add-on Developer Hub:
+
+```text
+dist/video-downloader-firefox-0.1.0.zip
+```
+
+The ZIP is built with `manifest.json` at the archive root, which is what AMO expects. The `.xpi` beside it is the same package with Firefox's install extension.
+
+Suggested AMO reviewer note:
+
+```text
+This extension opens a local companion downloader at http://127.0.0.1:8787 and declares nativeMessaging for a local helper named video_downloader_host. The companion app/native host is installed separately by the user and wraps yt-dlp/ffmpeg. The extension package itself does not include yt-dlp, ffmpeg, or the native host binary.
+```
+
 ## Limits
 
 - DRM-protected media is not supported.
