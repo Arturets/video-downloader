@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Video Downloader</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <section class="panel">
+        <h1>Video Downloader</h1>
+        <form id="lookup-form" class="lookup">
+          <input id="url" name="url" type="url" placeholder="Paste a video link" autocomplete="off" required>
+          <button type="submit">Find Options</button>
+        </form>
+        <p id="status" class="status" role="status"></p>
+      </section>
+
+      <section id="result" class="result" hidden>
+        <div class="media">
+          <img id="thumbnail" alt="">
+          <div>
+            <p id="source" class="source"></p>
+            <h2 id="title"></h2>
+            <p id="meta" class="meta"></p>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <label for="format">Format</label>
+          <select id="format"></select>
+          <button id="download" type="button">Download</button>
+        </div>
+      </section>
+    </main>
+    <script src="/main.js" type="module"></script>
+  </body>
+</html>

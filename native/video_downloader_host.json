@@ -1,0 +1,7 @@
+{
+  "name": "video_downloader_host",
+  "description": "Video Downloader native messaging host",
+  "path": "/Users/arthursafiullin/Documents/Video Downloader/native/host.js",
+  "type": "stdio",
+  "allowed_extensions": ["video-downloader@local"]
+}

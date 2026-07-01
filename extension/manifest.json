@@ -1,0 +1,40 @@
+{
+  "manifest_version": 2,
+  "name": "Video Downloader",
+  "version": "0.1.0",
+  "description": "Send video pages to the local Video Downloader helper.",
+  "permissions": [
+    "activeTab",
+    "contextMenus",
+    "nativeMessaging",
+    "tabs",
+    "*://*.youtube.com/*",
+    "*://*.substack.com/*",
+    "*://*.twitter.com/*",
+    "*://*.x.com/*"
+  ],
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.youtube.com/*",
+        "*://*.substack.com/*",
+        "*://*.twitter.com/*",
+        "*://*.x.com/*"
+      ],
+      "js": ["content-script.js"],
+      "css": ["content-style.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "browser_action": {
+    "default_title": "Download video"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "video-downloader@local"
+    }
+  }
+}
