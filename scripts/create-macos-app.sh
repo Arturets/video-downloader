@@ -5,8 +5,11 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 APP_DIR="$ROOT/dist/Video Downloader.app"
 MACOS_DIR="$APP_DIR/Contents/MacOS"
 RESOURCES_DIR="$APP_DIR/Contents/Resources"
+RESOURCE_APP_DIR="$RESOURCES_DIR/app"
 
 mkdir -p "$MACOS_DIR" "$RESOURCES_DIR"
+rm -rf "$RESOURCE_APP_DIR"
+cp -R "$ROOT/app" "$RESOURCE_APP_DIR"
 
 cat > "$APP_DIR/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
@@ -36,6 +39,7 @@ cat > "$MACOS_DIR/video-downloader" <<LAUNCHER
 set -euo pipefail
 
 ROOT="$ROOT"
+APP_ROOT="\$(cd "\$(dirname "\${BASH_SOURCE[0]}")/../Resources/app" && pwd)"
 export PATH="\$HOME/.volta/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:\${PATH:-}"
 PORT="\${PORT:-8787}"
 URL="http://127.0.0.1:\${PORT}/"
@@ -75,9 +79,12 @@ if ! command -v ffmpeg >/dev/null 2>&1; then
   exit 1
 fi
 
+SERVER_PID=""
+
 if ! curl -fsS "\$URL" >/dev/null 2>&1; then
-  VIDEO_DOWNLOAD_DIR="\${VIDEO_DOWNLOAD_DIR:-\$HOME/Downloads}" PORT="\$PORT" nohup "\$NODE_BIN" "\$ROOT/app/server.js" > "\$LOG_DIR/server.log" 2>&1 &
-  echo "\$!" > "\$PID_FILE"
+  VIDEO_DOWNLOAD_DIR="\${VIDEO_DOWNLOAD_DIR:-\$HOME/Downloads}" PORT="\$PORT" nohup "\$NODE_BIN" "\$APP_ROOT/server.js" > "\$LOG_DIR/server.log" 2>&1 &
+  SERVER_PID="\$!"
+  echo "\$SERVER_PID" > "\$PID_FILE"
   for _ in {1..40}; do
     if curl -fsS "\$URL" >/dev/null 2>&1; then
       break
@@ -87,6 +94,10 @@ if ! curl -fsS "\$URL" >/dev/null 2>&1; then
 fi
 
 open "\$URL"
+
+if [ -n "\$SERVER_PID" ]; then
+  wait "\$SERVER_PID"
+fi
 LAUNCHER
 
 chmod +x "$MACOS_DIR/video-downloader"
