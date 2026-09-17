@@ -7,8 +7,9 @@
     "dev": "node app/server.js",
     "start": "node app/server.js",
     "package:mac": "bash scripts/create-macos-app.sh",
+    "update:mac": "bash scripts/update-macos-app.sh",
     "package:firefox": "bash scripts/package-firefox-extension.sh",
-    "check": "node --check app/server.js && node --check native/host.js && node --check extension/background.js && node --check extension/content-script.js && node --check app/public/main.js && node --check scripts/render-native-manifest.js && bash -n scripts/create-macos-app.sh && bash -n scripts/install-macos.sh && bash -n scripts/package-firefox-extension.sh"
+    "check": "node --check app/server.js && node --check native/host.js && node --check extension/background.js && node --check extension/content-script.js && node --check app/public/main.js && node --check scripts/render-native-manifest.js && bash -n scripts/create-macos-app.sh && bash -n scripts/update-macos-app.sh && bash -n scripts/install-macos.sh && bash -n scripts/package-firefox-extension.sh"
   },
   "engines": {
     "node": ">=22"

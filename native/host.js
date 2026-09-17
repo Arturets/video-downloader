@@ -5,6 +5,7 @@ import { join } from "node:path";
 
 const YTDLP = process.env.YTDLP_PATH || "yt-dlp";
 const DOWNLOAD_DIR = process.env.VIDEO_DOWNLOAD_DIR || join(homedir(), "Downloads");
+const COOKIE_BROWSER = process.env.YTDLP_COOKIE_BROWSER || "firefox";
 
 function send(message) {
   const json = Buffer.from(JSON.stringify(message), "utf8");
@@ -30,7 +31,7 @@ function runYtdlp(args) {
 
 async function handle(message) {
   if (message.type === "info") {
-    const stdout = await runYtdlp(["--dump-single-json", "--no-playlist", message.url]);
+    const stdout = await runYtdlp(["--cookies-from-browser", COOKIE_BROWSER, "--dump-single-json", "--no-playlist", message.url]);
     const info = JSON.parse(stdout);
     send({
       ok: true,
@@ -55,6 +56,8 @@ async function handle(message) {
 
   if (message.type === "download") {
     const args = [
+      "--cookies-from-browser",
+      COOKIE_BROWSER,
       "--no-playlist",
       "--paths",
       DOWNLOAD_DIR,

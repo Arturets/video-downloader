@@ -9,11 +9,26 @@
   <body>
     <main class="shell">
       <section class="panel">
-        <h1>Video Downloader</h1>
+        <div class="heading">
+          <h1>Video Downloader</h1>
+          <div class="header-actions">
+            <button id="update" class="text-button" type="button" hidden>Update</button>
+            <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">Dark mode</button>
+          </div>
+        </div>
+        <p id="update-status" class="update-status" hidden></p>
         <form id="lookup-form" class="lookup">
           <input id="url" name="url" type="url" placeholder="Paste a video link" autocomplete="off" required>
           <button type="submit">Find Options</button>
         </form>
+        <div class="command-editor command-editor-preview">
+          <div class="command-heading">
+            <label for="command">yt-dlp command</label>
+            <button id="reset-command" class="text-button" type="button">Reset to GUI settings</button>
+          </div>
+          <textarea id="command" spellcheck="false" aria-describedby="command-help"></textarea>
+          <p id="command-help" class="command-help">This preview updates as you paste a link or choose formats. Edit it to add any yt-dlp options; it runs without a shell.</p>
+        </div>
         <p id="status" class="status" role="status"></p>
       </section>
 
@@ -36,6 +51,6 @@
         </div>
       </section>
     </main>
-    <script src="/main.js?v=0.1.1" type="module"></script>
+    <script src="/main.js?v=0.2.0" type="module"></script>
   </body>
 </html>

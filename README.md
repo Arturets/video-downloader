@@ -22,11 +22,20 @@ npm run dev
 ```
 
 Open `http://127.0.0.1:8787`, paste a URL, choose a format, and download.
+The generated `yt-dlp` command is shown below the format controls and can be edited
+before downloading. The app uses your Firefox cookies by default; set a different
+supported browser with `YTDLP_COOKIE_BROWSER` if needed.
 
 Downloads are saved to `~/Downloads` by default. Override with:
 
 ```sh
 VIDEO_DOWNLOAD_DIR=/path/to/folder npm run dev
+```
+
+For example, to use Chrome cookies instead:
+
+```sh
+YTDLP_COOKIE_BROWSER=chrome npm run dev
 ```
 
 ## Install as a local macOS app
@@ -48,6 +57,20 @@ After that, open the app directly. It starts the local server with `node`, opens
 ```
 
 This app wrapper does not require `npm` to launch, but it does still require Node.js, `yt-dlp`, and `ffmpeg` to be installed on the machine.
+
+## Update the macOS app
+
+The packaged app compares its embedded build version with `package.json` in the
+source directory it was built from. Increase the version there (for example,
+from `0.1.0` to `0.1.1`), then open the app and select **Update** when it is
+offered. It creates a fresh package from that source and updates the existing
+`.app` in place before restarting it.
+
+You can run the same process from Terminal:
+
+```sh
+npm run update:mac
+```
 
 ## Install the Firefox native messaging host
 

@@ -1,5 +1,5 @@
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
   --bg: #f7f3ea;
   --panel: #ffffff;
   --text: #1d2528;
@@ -8,6 +8,17 @@
   --accent-strong: #095d4c;
   --border: #d7d2c8;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #111816;
+  --panel: #19231f;
+  --text: #e8f1ed;
+  --muted: #a5b5ad;
+  --accent: #32ad8e;
+  --accent-strong: #65cdb3;
+  --border: #35483f;
 }
 
 * {
@@ -23,7 +34,8 @@ body {
 
 button,
 input,
-select {
+select,
+textarea {
   font: inherit;
 }
 
@@ -47,6 +59,41 @@ h1 {
   line-height: 1;
 }
 
+.heading,
+.command-heading {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.update-status {
+  margin: -8px 0 16px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.theme-toggle,
+.text-button {
+  padding: 8px 10px;
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.theme-toggle:hover,
+.text-button:hover {
+  background: var(--bg);
+  color: var(--accent-strong);
+}
+
 h2 {
   margin: 4px 0 8px;
   font-size: 24px;
@@ -67,13 +114,23 @@ h2 {
 }
 
 input,
-select {
+select,
+textarea {
   min-width: 0;
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 12px 14px;
   background: transparent;
   color: var(--text);
+}
+
+textarea {
+  width: 100%;
+  min-height: 112px;
+  resize: vertical;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.5;
 }
 
 button {
@@ -107,6 +164,24 @@ button:disabled {
 
 .result {
   margin-top: 18px;
+}
+
+.command-editor {
+  margin-top: 24px;
+}
+
+.command-editor-preview {
+  margin-top: 16px;
+}
+
+.command-heading label {
+  font-weight: 700;
+}
+
+.command-help {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 13px;
 }
 
 .media {

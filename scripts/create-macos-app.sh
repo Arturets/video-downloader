@@ -2,7 +2,8 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-APP_DIR="$ROOT/dist/Video Downloader.app"
+VERSION="$(node -p "require('$ROOT/package.json').version")"
+APP_DIR="${VIDEO_DOWNLOADER_APP_DIR:-$ROOT/dist/Video Downloader.app}"
 MACOS_DIR="$APP_DIR/Contents/MacOS"
 RESOURCES_DIR="$APP_DIR/Contents/Resources"
 RESOURCE_APP_DIR="$RESOURCES_DIR/app"
@@ -10,6 +11,8 @@ RESOURCE_APP_DIR="$RESOURCES_DIR/app"
 mkdir -p "$MACOS_DIR" "$RESOURCES_DIR"
 rm -rf "$RESOURCE_APP_DIR"
 cp -R "$ROOT/app" "$RESOURCE_APP_DIR"
+rm -rf "$RESOURCES_DIR/scripts"
+cp -R "$ROOT/scripts" "$RESOURCES_DIR/scripts"
 
 cat > "$APP_DIR/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
@@ -27,7 +30,11 @@ cat > "$APP_DIR/Contents/Info.plist" <<PLIST
   <key>CFBundlePackageType</key>
   <string>APPL</string>
   <key>CFBundleShortVersionString</key>
-  <string>0.1.0</string>
+  <string>$VERSION</string>
+  <key>CFBundleVersion</key>
+  <string>$VERSION</string>
+  <key>VideoDownloaderSourceDirectory</key>
+  <string>$ROOT</string>
   <key>LSMinimumSystemVersion</key>
   <string>13.0</string>
 </dict>
@@ -40,6 +47,7 @@ set -euo pipefail
 
 ROOT="$ROOT"
 APP_ROOT="\$(cd "\$(dirname "\${BASH_SOURCE[0]}")/../Resources/app" && pwd)"
+APP_BUNDLE_PATH="\$(cd "\$(dirname "\${BASH_SOURCE[0]}")/../.." && pwd)"
 export PATH="\$HOME/.volta/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:\${PATH:-}"
 PORT="\${PORT:-8787}"
 URL="http://127.0.0.1:\${PORT}/"
@@ -82,7 +90,7 @@ fi
 SERVER_PID=""
 
 if ! curl -fsS "\$URL" >/dev/null 2>&1; then
-  VIDEO_DOWNLOAD_DIR="\${VIDEO_DOWNLOAD_DIR:-\$HOME/Downloads}" PORT="\$PORT" nohup "\$NODE_BIN" "\$APP_ROOT/server.js" > "\$LOG_DIR/server.log" 2>&1 &
+  VIDEO_DOWNLOAD_DIR="\${VIDEO_DOWNLOAD_DIR:-\$HOME/Downloads}" PORT="\$PORT" APP_VERSION="$VERSION" VIDEO_DOWNLOADER_SOURCE_ROOT="\$ROOT" VIDEO_DOWNLOADER_APP_BUNDLE="\$APP_BUNDLE_PATH" nohup "\$NODE_BIN" "\$APP_ROOT/server.js" > "\$LOG_DIR/server.log" 2>&1 &
   SERVER_PID="\$!"
   echo "\$SERVER_PID" > "\$PID_FILE"
   for _ in {1..40}; do
